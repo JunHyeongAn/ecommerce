@@ -1,6 +1,9 @@
 package com.ecommerce.dto;
 
 import java.util.Date;
+import java.util.List;
+
+import com.ecommerce.vo.ResponseOrder;
 
 import lombok.Data;
 
@@ -13,4 +16,5 @@ public class UserDto {
 	private Date createAt;
 	
 	private String encryptedPwd;
+	private List<ResponseOrder> orders;
 }

@@ -1,5 +1,8 @@
 package com.ecommerce.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +11,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.dto.UserDto;
+import com.ecommerce.jpa.UserEntity;
 import com.ecommerce.service.UserService;
 import com.ecommerce.vo.Greeting;
 import com.ecommerce.vo.RequestUser;
@@ -42,8 +47,25 @@ public class UserController {
 		return greeting.getMessage();
 	}
 	
+	@GetMapping("/users")
+	public ResponseEntity<List<ResponseUser>> getUsers() {
+		Iterable<UserEntity> userList = userService.getUserByAll();
+		
+		List<ResponseUser> result = new ArrayList<ResponseUser>();
+		userList.forEach(v -> result.add(new ModelMapper().map(v, ResponseUser.class)));
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
+	}
+	
+	@GetMapping("/users/{userId}")
+	public ResponseEntity<ResponseUser> getUserByUserId(@PathVariable("userId")String userId) {
+		UserDto userDto = userService.getUserByUserId(userId);
+		ResponseUser responseUser = new ModelMapper().map(userDto, ResponseUser.class);
+		return ResponseEntity.status(HttpStatus.OK).body(responseUser);
+	}
+	
 	@PostMapping("/users")
-	public ResponseEntity<Object> createUser(@RequestBody RequestUser requestUser) {
+	public ResponseEntity<ResponseUser> createUser(@RequestBody RequestUser requestUser) {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		
