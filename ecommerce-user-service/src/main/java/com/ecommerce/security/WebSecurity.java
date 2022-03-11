@@ -14,8 +14,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
 		http.authorizeHttpRequests()
-			.antMatchers("/h2-console/**").permitAll()
-			.antMatchers("/user-service/**").permitAll();
+		.antMatchers("/**")
+		.permitAll()
+		.and()
+		.addFilter(getAuthenticationFilter());
+		
 		http.headers().frameOptions().disable();
 	}
 	
@@ -23,5 +26,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		// TODO Auto-generated method stub
 		super.configure(auth);
+	}
+	
+	private AuthenticationFilter getAuthenticationFilter() throws Exception {
+		AuthenticationFilter authenticationFilter = new AuthenticationFilter();
+		authenticationFilter.setAuthenticationManager(authenticationManager());
+		return authenticationFilter;
 	}
 }
