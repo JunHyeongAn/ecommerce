@@ -8,4 +8,4 @@ spring:
     config:
       server:
         git:
-          uri: C:\Users\sure0\Desktop\WorkSpaces\ecommerce\git-local-repo
+          uri: file://C:/Users/sure0/OneDrive/바탕 화면/WorkSpaces/ecommerce-git/ecommerce/git-local-repo
